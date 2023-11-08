@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Registration Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="registration-container" class="container">
+    <h1 class="form-title">Registration Form</h1>
+    <form id="registration-form" action="#">
+      <div class="main-user-info">
+        <div class="user-input-box">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullName" placeholder="Enter Full Name" />
+          <div class="error-message" id="fullName-error">Please enter a Full name</div>
+        </div>
+        <div class="user-input-box">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="Enter Username" />
+          <div class="error-message" id="username-error">Please enter a Username</div>
+        </div>
+        <div class="user-input-box">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter Email" />
+          <div class="error-message" id="email-error">Please enter a valid email address.</div>
+        </div>
+        <div class="user-input-box">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="Enter Phone Number" />
+          <div class="error-message" id="phone-error">Please enter a valid phone number.</div>
+        </div>
+        <div class="user-input-box">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter Password" />
+          <div class="error-message" id="password-error">Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.</div>
+        </div>
+        <div class="user-input-box">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" />
+          <div class="error-message" id="confirmPassword-error">Passwords do not match.</div>
+        </div>
+      </div>
+      <div class="gender-details-box">
+        <span class="gender-title">Gender</span>
+        <div class="gender-category">
+          <input type="radio" name="gender" id="male">
+          <label for="male">Male</label>
+          <input type="radio" name="gender" id="female">
+          <label for="female">Female</label>
+          <input type="radio" name="gender" id="other">
+          <label for="other">Other</label>
+        </div>
+        <div class="error-message" id="gender-error">Please select a gender.</div>
+      </div>
+      <div class="form-submit-btn">
+        <input type="submit" value="Register">
+      </div>
+    </form>
+    <div class="confirmation-message" id="confirmation-message" style="display: none;">
+      <h2 style="color: #fff; font-size: 28px; margin-bottom: 10px;">Registration Successful!</h2>
+      <p style="font-size: 20px;">Thank you for registering. </p>
+      <a href="registration-container" id="ok-button">
+        <input type="button" value="OK">
+      </a>
+    </div>
+  </div>
+  <script>
+    document.getElementById("registration-form").addEventListener("submit", function(event) {
+      // Reset all error messages
+      const errorMessages = document.querySelectorAll('.error-message');
+      errorMessages.forEach(function (errorMessage) {
+        errorMessage.style.display = "none";
+      });
+
+      let isValid = true;
+
+      const fullNameInput = document.getElementById("fullName");
+      const usernameInput = document.getElementById("username");
+      const genderInputs = document.querySelectorAll('input[name="gender"]:checked');
+      const emailInput = document.getElementById("email");
+      const phoneInput = document.getElementById("phone");
+      const passwordInput = document.getElementById("password");
+      const confirmPasswordInput = document.getElementById("confirmPassword");
+
+      // Validate Full Name
+      if (fullNameInput.value.trim() === "") {
+        document.getElementById("fullName-error").textContent = "Please enter your full name.";
+        document.getElementById("fullName-error").style.display = "block";
+        isValid = false;
+      }
+
+      // Validate Username
+      if (usernameInput.value.trim() === "") {
+        document.getElementById("username-error").textContent = "Please enter a username.";
+        document.getElementById("username-error").style.display = "block";
+        isValid = false;
+      }
+      //Validate Phone number
+      const phoneRegex = /^[6789]\d{9}$/; 
+      if (!phoneRegex.test(phoneInput.value)) {
+        document.getElementById("phone-error").textContent = "Please enter a valid 10-digit Indian mobile phone number.";
+        document.getElementById("phone-error").style.display = "block";
+        isValid = false;
+      }
+
+      //Validate Email
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail.com$/; 
+      if (!emailRegex.test(emailInput.value)) {
+        document.getElementById("email-error").textContent = "Please enter a valid Gmail address.";
+        document.getElementById("email-error").style.display = "block";
+        isValid = false;
+      }
+
+      // Validate Gender
+      if (genderInputs.length === 0) {
+        document.getElementById("gender-error").textContent = "Please select a gender.";
+        document.getElementById("gender-error").style.display = "block";
+        isValid = false;
+      }
+     
+      // Validate Password
+      if (passwordInput.value.length < 8) {
+        document.getElementById("password-error").textContent = "Password must be at least 8 characters long.";
+        document.getElementById("password-error").style.display = "block";
+        isValid = false;
+      } else {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&!*_])[A-Za-z\d@#$%^&!*_]{8,}$/;
+        if (!passwordRegex.test(passwordInput.value)) {
+          document.getElementById("password-error").textContent = "Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.";
+          document.getElementById("password-error").style.display = "block";
+          isValid = false;
+        }
+      }
+
+      // validate confirm password
+
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        document.getElementById("confirmPassword-error").textContent = "Passwords do not match.";
+        document.getElementById("confirmPassword-error").style.display = "block";
+        isValid = false;
+      }
+      
+      
+
+      if (!isValid) {
+        event.preventDefault(); // Prevent form submission if there are validation errors.
+      } else {
+        // Form validation succeeded, hide the form and display the confirmation message.
+        const registrationForm = document.getElementById("registration-form");
+        registrationForm.style.display = "none";
+        const confirmationMessage = document.getElementById("confirmation-message");
+        confirmationMessage.style.display = "block";
+        event.preventDefault(); // Prevent the form from actually submitting.
+      }
+    });
+
+    document.getElementById("ok-button").addEventListener("click", function(event) {
+      event.preventDefault();
+      document.getElementById("registration-form").style.display = "block";
+      document.getElementById("confirmation-message").style.display = "none";
+      window.scrollTo(0, 0);
+
+      // Clear form fields
+      document.getElementById("fullName").value = "";
+      document.getElementById("username").value = "";
+      document.getElementById("email").value = "";
+      document.getElementById("phone").value = "";
+      document.getElementById("password").value = "";
+      document.getElementById("confirmPassword").value = "";
+
+      // Uncheck radio buttons
+      const genderRadioButtons = document.querySelectorAll('input[name="gender"]');
+      genderRadioButtons.forEach(function (radioButton) {
+        radioButton.checked = false;
+      });
+    });
+  </script>
+</body>
+</html>
